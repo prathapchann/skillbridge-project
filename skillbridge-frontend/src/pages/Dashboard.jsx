@@ -1,183 +1,207 @@
-import { useState, useEffect } from "react";
-
+import { useState } from "react";
 import axios from "axios";
 
 function Dashboard() {
 
-  const [name, setName] = useState("");
-
-  const [skillOffered, setSkillOffered] = useState("");
-
-  const [skillWanted, setSkillWanted] = useState("");
-
-  const [location, setLocation] = useState("");
-
-  const [bio, setBio] = useState("");
-  const [email, setEmail] = useState("");
-
+const [name, setName] = useState("");
+const [email, setEmail] = useState("");
 const [password, setPassword] = useState("");
-useEffect(() => {
+const [contactNumber, setContactNumber] = useState("");
+const [skillOffered, setSkillOffered] = useState("");
+const [skillWanted, setSkillWanted] = useState("");
+const [location, setLocation] = useState("");
+const [bio, setBio] = useState("");
 
-  const userData = JSON.parse(
-    localStorage.getItem("skillbridgeUser")
+const handleSubmit = async (e) => {
+
+
+e.preventDefault();
+
+if (
+  !name ||
+  !email ||
+  !password ||
+  !contactNumber ||
+  !skillOffered ||
+  !skillWanted ||
+  !location ||
+  !bio
+) {
+  alert("Please fill all fields");
+  return;
+}
+
+try {
+
+  await axios.post(
+    "http://localhost:3000/api/users/register",
+    {
+      name,
+      email,
+      password,
+      contactNumber,
+      skillOffered,
+      skillWanted,
+      location,
+      bio
+    }
   );
 
-  if(userData){
+  alert("Profile Saved Successfully");
 
-    setEmail(userData.email);
+  setName("");
+  setEmail("");
+  setPassword("");
+  setContactNumber("");
+  setSkillOffered("");
+  setSkillWanted("");
+  setLocation("");
+  setBio("");
 
-    setPassword(userData.password);
-  }
+} catch (error) {
 
-}, []);
+  console.log(error);
 
-
-  const handleSubmit = async (e) => {
-
-    e.preventDefault();
-
-    try {
-
-      await axios.post(
-        "http://localhost:3000/api/users/register",
-        {
-          name,
-          email,
-          password,
-          skillOffered,
-          skillWanted,
-          location,
-          bio 
-        }
-      );
-
-      alert("Profile Saved");
-
-      setName("");
-      setSkillOffered("");
-      setSkillWanted("");
-      setLocation("");
-      setBio("");
-
-    } catch (error) {
-
-      console.log(error);
-    }
-  };
+  alert("Error Saving Profile");
+}
 
 
-  return (
+};
 
-    <div
+return (
+<div
+style={{
+minHeight: "100vh",
+background: "linear-gradient(to right, #0f172a, #1e293b)",
+display: "flex",
+justifyContent: "center",
+alignItems: "center",
+padding: "30px",
+fontFamily: "Arial"
+}}
+>
+
+
+  <form
+    onSubmit={handleSubmit}
+    style={{
+      width: "550px",
+      background: "rgba(255,255,255,0.08)",
+      backdropFilter: "blur(10px)",
+      padding: "40px",
+      borderRadius: "20px",
+      display: "flex",
+      flexDirection: "column",
+      gap: "15px",
+      boxShadow: "0 8px 30px rgba(0,0,0,0.3)"
+    }}
+  >
+
+    <h2
       style={{
-        minHeight:"100vh",
-        background:"linear-gradient(to right, #0f172a, #1e293b)",
-        display:"flex",
-        justifyContent:"center",
-        alignItems:"center",
-        padding:"30px",
-        fontFamily:"Arial"
+        color: "white",
+        textAlign: "center"
       }}
     >
+      SkillBridge Dashboard
+    </h2>
 
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          width:"500px",
-          background:"rgba(255,255,255,0.08)",
-          backdropFilter:"blur(10px)",
-          padding:"40px",
-          borderRadius:"20px",
-          display:"flex",
-          flexDirection:"column",
-          gap:"18px",
-          boxShadow:"0 8px 30px rgba(0,0,0,0.3)"
-        }}
-      >
+    <input
+      type="text"
+      placeholder="Full Name"
+      value={name}
+      onChange={(e) => setName(e.target.value)}
+      style={inputStyle}
+    />
 
-        <h2
-          style={{
-            color:"white",
-            textAlign:"center"
-          }}
-        >
-          SkillBridge Dashboard
-        </h2>
+    <input
+      type="email"
+      placeholder="Email Address"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+      style={inputStyle}
+    />
 
-        <input
-          type="text"
-          placeholder="Full Name"
-          value={name}
-          onChange={(e)=>setName(e.target.value)}
-          style={inputStyle}
-        />
+    <input
+      type="password"
+      placeholder="Password"
+      value={password}
+      onChange={(e) => setPassword(e.target.value)}
+      style={inputStyle}
+    />
 
-        <input
-          type="text"
-          placeholder="Skill Offered"
-          value={skillOffered}
-          onChange={(e)=>setSkillOffered(e.target.value)}
-          style={inputStyle}
-        />
+    <input
+      type="text"
+      placeholder="Contact Number"
+      value={contactNumber}
+      onChange={(e) => setContactNumber(e.target.value)}
+      style={inputStyle}
+    />
 
-        <input
-          type="text"
-          placeholder="Skill Wanted"
-          value={skillWanted}
-          onChange={(e)=>setSkillWanted(e.target.value)}
-          style={inputStyle}
-        />
+    <input
+      type="text"
+      placeholder="Skill Offered"
+      value={skillOffered}
+      onChange={(e) => setSkillOffered(e.target.value)}
+      style={inputStyle}
+    />
 
-        <input
-          type="text"
-          placeholder="Location"
-          value={location}
-          onChange={(e)=>setLocation(e.target.value)}
-          style={inputStyle}
-        />
+    <input
+      type="text"
+      placeholder="Skill Wanted"
+      value={skillWanted}
+      onChange={(e) => setSkillWanted(e.target.value)}
+      style={inputStyle}
+    />
 
-        <textarea
-          placeholder="Bio"
-          value={bio}
-          onChange={(e)=>setBio(e.target.value)}
-          style={{
-            ...inputStyle,
-            minHeight:"100px"
-          }}
-        />
+    <input
+      type="text"
+      placeholder="Location"
+      value={location}
+      onChange={(e) => setLocation(e.target.value)}
+      style={inputStyle}
+    />
 
-        <button
-          type="submit"
-          style={{
-            background:"#2563eb",
-            color:"white",
-            border:"none",
-            padding:"14px",
-            borderRadius:"10px",
-            fontWeight:"bold",
-            cursor:"pointer"
-          }}
-        >
-          Save Profile
-        </button>
+    <textarea
+      placeholder="Tell something about yourself..."
+      value={bio}
+      onChange={(e) => setBio(e.target.value)}
+      style={{
+        ...inputStyle,
+        minHeight: "100px",
+        resize: "none"
+      }}
+    />
 
-      </form>
+    <button
+      type="submit"
+      style={{
+        background: "#2563eb",
+        color: "white",
+        border: "none",
+        padding: "14px",
+        borderRadius: "10px",
+        fontWeight: "bold",
+        cursor: "pointer"
+      }}
+    >
+      Save Profile
+    </button>
 
-    </div>
-  );
+  </form>
+
+</div>
+
+
+);
 }
 
 const inputStyle = {
-
-  padding:"14px",
-
-  borderRadius:"10px",
-
-  border:"none",
-
-  outline:"none",
-
-  fontSize:"15px"
+padding: "14px",
+borderRadius: "10px",
+border: "none",
+outline: "none",
+fontSize: "15px"
 };
 
 export default Dashboard;

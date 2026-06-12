@@ -2,6 +2,8 @@ import { useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 
+import axios from "axios";
+
 function Login() {
 
   const navigate = useNavigate();
@@ -10,31 +12,44 @@ function Login() {
 
   const [password, setPassword] = useState("");
 
+  const handleLogin = async (e) => {
 
-  const handleLogin = (e) => {
+    e.preventDefault();
 
-  e.preventDefault();
+    try {
 
-  if(email && password){
+      const res = await axios.post(
+        "http://localhost:3000/api/users/login",
+        {
+          email,
+          password
+        }
+      );
 
-    // STORE USER DATA
-    localStorage.setItem(
-      "skillbridgeUser",
-      JSON.stringify({
-        email,
-        password
-      })
-    );
+      localStorage.setItem(
+  "token",
+  res.data.token
+);
 
-    alert("Login Successful");
+localStorage.setItem(
+  "skillbridgeUser",
+  JSON.stringify({
+    email,
+    password
+  })
+);
 
-    navigate("/dashboard");
+      alert("Login Successful");
 
-  } else {
+      navigate("/dashboard");
 
-    alert("Please fill all fields");
-  }
-};
+    } catch (error) {
+
+      alert("Invalid Email or Password");
+
+      console.log(error);
+    }
+  };
 
   return (
 
